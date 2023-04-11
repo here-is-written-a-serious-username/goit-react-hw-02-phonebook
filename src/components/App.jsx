@@ -17,16 +17,20 @@ export class App extends Component {
   };
 
   handleSubmit = (contact) => {
+    let duplicate = this.state.contacts.filter(contacte => contacte.name === contact.name).length;
 
-    this.setState(prevState => ({
-      contacts: [{
-        name: `${contact.name}`,
-        number: `${contact.number}`,
-        id: nanoid(3),
-      },
-      ...prevState.contacts],
-
-    }))
+    if (duplicate) {
+      alert(`${contact.name}  is already in contacts`);
+    } else {
+      this.setState(prevState => ({
+        contacts: [{
+          name: `${contact.name}`,
+          number: `${contact.number}`,
+          id: nanoid(3),
+        },
+        ...prevState.contacts],
+      }))
+    }
   }
 
 
