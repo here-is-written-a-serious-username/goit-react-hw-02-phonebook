@@ -1,69 +1,48 @@
 import React, { Component } from 'react';
 import { nanoid } from 'nanoid'
+import ContactForm from './ContactForm';
+import Filter from './Filter';
+import ContactList from './ContactList';
 
 
 export class App extends Component {
   state = {
     contacts: [],
-    name: ''
+    filter: '',
   }
 
   handleChange = evt => {
-    this.setState({ name: evt.currentTarget.value });
+    const { name, value } = evt.target;
+    this.setState({ [name]: value });
   };
 
-  handleSubmit = (evt) => {
-    evt.preventDefault();
+  handleSubmit = (contact) => {
 
-    // let aaa = this.setState([...this.state.contacts, { name: `${this.state.name}` }]);
-
-    // this.setState(({ contacts }) => ({
-    //   contacts: [{ name: `${this.state.name}` }, ...contacts],
-    // }));
-
-    this.setState({
+    this.setState(prevState => ({
       contacts: [{
-        name: `${this.state.name}`,
+        name: `${contact.name}`,
+        number: `${contact.number}`,
         id: nanoid(3),
       },
-      ...this.state.contacts],
-      name: '',
-    })
+      ...prevState.contacts],
 
-    console.log(this.state)
+    }))
   }
 
+
   render() {
+    const { contacts, name, number, filter } = this.state;
+
+    const newСontacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
 
     return (
       <>
-
         <h1>Phonebook</h1>
-
-        <form onSubmit={this.handleSubmit}>
-
-          <label >
-            <input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-              required
-              onChange={this.handleChange}
-              value={this.state.name}
-            />
-          </label>
-
-          <button type='submit'>Add Contact</button>
-
-        </form>
+        <ContactForm onSubmit={this.handleSubmit}></ContactForm>
 
         <h2>Contacts</h2>
-        <ul>
-          {this.state.contacts.map((contact) => (
-            <li key={contact.id}>{contact.name}</li>
-          ))}
-        </ul>
+        <Filter handleChange={this.handleChange} filter={filter} />
+        <ContactList contacts={newСontacts} />
       </>
     );
   }
