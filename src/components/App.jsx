@@ -3,7 +3,12 @@ import { nanoid } from 'nanoid'
 import ContactForm from './ContactForm';
 import Filter from './Filter';
 import ContactList from './ContactList';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+Notify.init({
+  position: 'center-top',
+  timeout: 7000,
+});
 
 export class App extends Component {
   state = {
@@ -20,7 +25,7 @@ export class App extends Component {
     let duplicate = this.state.contacts.filter(contacte => contacte.name === contact.name).length;
 
     if (duplicate) {
-      alert(`${contact.name}  is already in contacts`);
+      Notify.failure(`${contact.name}  is already in contacts`);
     } else {
       this.setState(prevState => ({
         contacts: [{
@@ -33,9 +38,16 @@ export class App extends Component {
     }
   }
 
+  handleDelete = id => {
+    this.setState(prevState => {
+      const newUsersList = prevState.contacts.filter(contact => contact.id !== id);
+      return { contacts: newUsersList };
+    });
+  };
+
 
   render() {
-    const { contacts, name, number, filter } = this.state;
+    const { contacts, filter } = this.state;
 
     const newСontacts = contacts.filter(contact => contact.name.toLowerCase().includes(filter.toLowerCase()));
 
@@ -46,7 +58,7 @@ export class App extends Component {
 
         <h2>Contacts</h2>
         <Filter handleChange={this.handleChange} filter={filter} />
-        <ContactList contacts={newСontacts} />
+        <ContactList contacts={newСontacts} onDelete={this.handleDelete} />
       </>
     );
   }

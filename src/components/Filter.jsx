@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import { PropTypes } from 'prop-types';
 
 
 class Filter extends Component {
-    state = {
-        filter: '',
-    }
+    // state = {
+    //     filter: '',
+    // }
 
     handleChange = evt => {
         const { name, value } = evt.target;
@@ -29,3 +30,8 @@ class Filter extends Component {
 
 
 export default Filter;
+
+Filter.propTypes = {
+    filter: PropTypes.string.isRequired,
+    handleChange: PropTypes.func.isRequired,
+}
