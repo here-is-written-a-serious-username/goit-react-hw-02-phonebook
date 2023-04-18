@@ -3,12 +3,12 @@ import { nanoid } from 'nanoid'
 import ContactForm from './ContactForm';
 import Filter from './Filter';
 import ContactList from './ContactList';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+// import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
-Notify.init({
-  position: 'center-top',
-  timeout: 7000,
-});
+// Notify.init({
+//   position: 'center-top',
+//   timeout: 7000,
+// });
 
 export class App extends Component {
   state = {
@@ -22,20 +22,16 @@ export class App extends Component {
   };
 
   handleSubmit = (contact) => {
-    let duplicate = this.state.contacts.filter(contacte => contacte.name === contact.name).length;
 
-    if (duplicate) {
-      Notify.failure(`${contact.name}  is already in contacts`);
-    } else {
-      this.setState(prevState => ({
-        contacts: [{
-          name: `${contact.name}`,
-          number: `${contact.number}`,
-          id: nanoid(3),
-        },
-        ...prevState.contacts],
-      }))
-    }
+    this.setState(prevState => ({
+      contacts: [{
+        name: `${contact.name}`,
+        number: `${contact.number}`,
+        id: nanoid(3),
+      },
+      ...prevState.contacts],
+    }))
+
   }
 
   handleDelete = id => {
@@ -54,7 +50,7 @@ export class App extends Component {
     return (
       <>
         <h1>Phonebook</h1>
-        <ContactForm onSubmit={this.handleSubmit}></ContactForm>
+        <ContactForm onSubmit={this.handleSubmit} contacts={contacts} ></ContactForm>
 
         <h2>Contacts</h2>
         <Filter handleChange={this.handleChange} filter={filter} />

@@ -1,6 +1,11 @@
 import React, { Component } from 'react';
-// import { PropTypes } from 'prop-types';
+import { PropTypes } from 'prop-types';
+import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
+Notify.init({
+    position: 'center-top',
+    timeout: 7000,
+});
 
 class ContactForm extends Component {
 
@@ -16,8 +21,16 @@ class ContactForm extends Component {
 
     handleSubmit = (evt) => {
         evt.preventDefault();
-        this.props.onSubmit(this.state);
-        this.setState({ name: '', number: '' });
+
+        const { contacts } = this.props;
+        let duplicate = contacts.filter(contact => contact.name === this.state.name).length;
+
+        if (duplicate) {
+            Notify.failure(`${this.state.name}  is already in contacts`);
+        } else {
+            this.props.onSubmit(this.state);
+            this.setState({ name: '', number: '' });
+        }
     }
 
     render() {
@@ -60,3 +73,11 @@ class ContactForm extends Component {
 
 
 export default ContactForm;
+
+
+ContactForm.propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    contacts: PropTypes.arrayOf(PropTypes.shape({
+        name: PropTypes.string.isRequired,
+    }))
+}
